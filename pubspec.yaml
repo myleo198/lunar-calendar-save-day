@@ -1,7 +1,7 @@
-name: lunar_calendar_app
-description: Lịch âm gia tộc - lưu giỗ chạp, sự kiện âm lịch, nhắc việc và đồng bộ Google Calendar.
+name: lich_am_gia_toc
+description: Ung dung lich am Viet Nam cho gia dinh va dong ho.
 publish_to: "none"
-version: 15.0.0+150
+version: 19.0.0+190
 
 environment:
   sdk: ">=3.4.0 <4.0.0"

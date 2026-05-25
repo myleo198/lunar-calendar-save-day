@@ -1,42 +1,28 @@
-# Hướng dẫn chuẩn GitHub cho dự án Lịch âm gia tộc
+# GitHub setup guide cho lich_am_gia_toc
 
-Tài liệu này dùng để đưa source Flutter lên GitHub, cấu hình `.gitignore`, GitHub Actions, release và quản lý build artifact.
+Tài liệu này dùng để đưa source **lich_am_gia_toc** lên GitHub theo cấu trúc sạch, không phụ thuộc tên phiên bản.
 
 ---
 
-## 1. Chuẩn bị thư mục source
+## 1. Chuẩn bị thư mục project
 
-Thư mục project nên đặt ngắn, không lồng nhiều cấp:
-
-```text
-M:\Flutter\lich_am_gia_toc_clean_v15_0_autoclean_logs
-```
-
-Tránh dạng:
+Nên đặt source tại đường dẫn ngắn:
 
 ```text
-M:\Flutter\lich_am_gia_toc_clean_v15_0_autoclean_logs\lich_am_gia_toc_clean_v15_0_autoclean_logs
+M:\Flutter\lich_am_gia_toc
 ```
 
-Các thư mục không cần có sẵn trong source:
+Không nên để lồng thư mục:
 
 ```text
-android/
-windows/
-ios/
-build/
-.dart_tool/
-dist/
-logs/
+M:\Flutter\lich_am_gia_toc\lich_am_gia_toc
 ```
-
-Script build sẽ tự tạo platform cần thiết.
 
 ---
 
 ## 2. File `.gitignore`
 
-Tạo file `.gitignore` ở thư mục gốc:
+Tạo file `.gitignore`:
 
 ```gitignore
 # Flutter / Dart
@@ -66,7 +52,7 @@ logs/
 android/app/key.properties
 android/local.properties
 
-# iOS/macOS
+# iOS/macOS generated
 ios/Pods/
 ios/.symlinks/
 ios/Flutter/Flutter.framework
@@ -96,34 +82,27 @@ Thumbs.db
 *.bak_*
 ```
 
-Ghi chú: project này cố ý không commit `android/` và `windows/` để tránh lỗi platform cũ. Script build sẽ chạy `flutter create -t app --platforms=... .` khi cần.
-
 ---
 
 ## 3. Khởi tạo Git
 
 ```bash
-cd /d M:\Flutter\lich_am_gia_toc_clean_v15_0_autoclean_logs
+cd /d M:\Flutter\lich_am_gia_toc
 
 git init
 git add .
-git commit -m "Initial clean release of Lunar Family Calendar"
+git commit -m "Initial clean release of lich_am_gia_toc"
 git branch -M main
-```
-
-Tạo repo trên GitHub, sau đó:
-
-```bash
-git remote add origin https://github.com/<your-user>/<your-repo>.git
+git remote add origin https://github.com/<your-user>/lich_am_gia_toc.git
 git push -u origin main
 ```
 
 ---
 
-## 4. Cấu trúc repo khuyến nghị
+## 4. Cấu trúc repository khuyến nghị
 
 ```text
-repo/
+lich_am_gia_toc/
 ├─ .github/
 │  └─ workflows/
 │     ├─ flutter_check.yml
@@ -139,6 +118,8 @@ repo/
 │  └─ SIGN_ANDROID_APK_FINAL.py
 ├─ BUILD_ANDROID_CLEAN.bat
 ├─ BUILD_WINDOWS_CLEAN.bat
+├─ BUILD_WINDOWS_DEBUG_ONLY.bat
+├─ BUILD_WINDOWS_RELEASE_ONLY.bat
 ├─ RUN_WINDOWS.bat
 ├─ pubspec.yaml
 ├─ README.md
@@ -147,15 +128,13 @@ repo/
 
 ---
 
-## 5. GitHub Actions: kiểm tra Flutter
+## 5. GitHub Actions kiểm tra Flutter
 
 Tạo file:
 
 ```text
 .github/workflows/flutter_check.yml
 ```
-
-Nội dung:
 
 ```yaml
 name: Flutter Check
@@ -193,15 +172,13 @@ jobs:
 
 ---
 
-## 6. GitHub Actions: build Android APK
+## 6. GitHub Actions build Android
 
 Tạo file:
 
 ```text
 .github/workflows/flutter_android.yml
 ```
-
-Nội dung:
 
 ```yaml
 name: Build Android APK
@@ -210,7 +187,7 @@ on:
   workflow_dispatch:
   push:
     tags:
-      - "v*.*.*"
+      - "release-*"
 
 jobs:
   build-android:
@@ -253,23 +230,19 @@ jobs:
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: lunar-calendar-android-apk
+          name: lich_am_gia_toc_android_apk
           path: build/app/outputs/flutter-apk/app-release.apk
 ```
 
-Ghi chú: workflow này build APK. Nếu muốn ký APK bằng keystore riêng cho phát hành chính thức, cấu hình GitHub Secrets và signingConfig riêng.
-
 ---
 
-## 7. GitHub Actions: build Windows
+## 7. GitHub Actions build Windows
 
 Tạo file:
 
 ```text
 .github/workflows/flutter_windows.yml
 ```
-
-Nội dung:
 
 ```yaml
 name: Build Windows
@@ -278,7 +251,7 @@ on:
   workflow_dispatch:
   push:
     tags:
-      - "v*.*.*"
+      - "release-*"
 
 jobs:
   build-windows:
@@ -319,27 +292,25 @@ jobs:
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force dist
-          Copy-Item -Recurse build/windows/x64/runner/Release dist/LichAmGiaToc_Windows
-          Compress-Archive -Path dist/LichAmGiaToc_Windows/* -DestinationPath dist/LichAmGiaToc_Windows.zip -Force
+          Copy-Item -Recurse build/windows/x64/runner/Release dist/lich_am_gia_toc
+          Compress-Archive -Path dist/lich_am_gia_toc/* -DestinationPath dist/lich_am_gia_toc.zip -Force
 
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
         with:
-          name: lunar-calendar-windows
-          path: dist/LichAmGiaToc_Windows.zip
+          name: lich_am_gia_toc_windows
+          path: dist/lich_am_gia_toc.zip
 ```
 
 ---
 
-## 8. GitHub Actions: build iOS không ký
+## 8. GitHub Actions build iOS không ký
 
 Tạo file:
 
 ```text
 .github/workflows/flutter_ios.yml
 ```
-
-Nội dung:
 
 ```yaml
 name: Build iOS No Codesign
@@ -371,56 +342,29 @@ jobs:
         run: flutter build ios --release --no-codesign
 ```
 
-Để phát hành iOS thật, cần Apple certificate, provisioning profile và Apple Developer account.
-
 ---
 
 ## 9. Tạo GitHub Release
 
-Sửa version trong `pubspec.yaml`:
-
-```yaml
-version: 15.0.0+150
-```
-
-Commit:
+Có thể dùng tag dạng chung:
 
 ```bash
-git add .
-git commit -m "Release v15.0.0"
-git tag v15.0.0
-git push origin main
-git push origin v15.0.0
+git tag release-stable
+git push origin release-stable
 ```
 
-Sau khi tag được push, GitHub Actions có thể tự build artifact.
+Hoặc dùng tag theo ngày:
+
+```bash
+git tag release-2026-05-25
+git push origin release-2026-05-25
+```
 
 ---
 
-## 10. Quy tắc đặt version
+## 10. Quản lý secret
 
-Dùng quy tắc:
-
-```text
-major.minor.patch+buildNumber
-```
-
-Ví dụ:
-
-```text
-15.0.0+150
-15.0.1+151
-15.1.0+160
-16.0.0+200
-```
-
-Khi phát hành Android, `buildNumber` phải tăng.
-
----
-
-## 11. Quản lý secrets
-
-Không commit các file sau:
+Không commit:
 
 ```text
 *.jks
@@ -431,49 +375,10 @@ Apple certificate
 Apple provisioning profile
 ```
 
-Dùng GitHub:
+Dùng:
 
 ```text
-Settings → Secrets and variables → Actions
+GitHub → Settings → Secrets and variables → Actions
 ```
 
 để lưu secret nếu cần build release chính thức.
-
----
-
-## 12. Lệnh kiểm tra nhanh trước khi push
-
-```bash
-flutter pub get
-flutter analyze
-```
-
-Nếu muốn test build Windows local:
-
-```bat
-BUILD_WINDOWS_CLEAN.bat
-```
-
-Nếu muốn test build Android local:
-
-```bat
-BUILD_ANDROID_CLEAN.bat
-```
-
----
-
-## 13. Quy trình sửa lỗi khuyến nghị
-
-1. Chạy script build.
-2. Nếu lỗi Windows, lấy file mới nhất trong:
-   ```text
-   logs/
-   ```
-3. Nếu lỗi Android, copy toàn bộ đoạn lỗi từ CMD.
-4. Không sửa trực tiếp platform sinh ra nếu chưa cần.
-5. Ưu tiên sửa:
-   - `lib/main.dart`
-   - `tools/PATCH_ANDROID_CLEAN.py`
-   - `tools/PATCH_WINDOWS_CLEAN.py`
-   - script `.bat`
-6. Sau khi ổn định mới tạo bản version mới.

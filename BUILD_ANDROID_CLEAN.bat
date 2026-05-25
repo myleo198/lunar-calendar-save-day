@@ -16,7 +16,7 @@ if not exist pubspec.yaml (
 )
 
 echo ==========================================
-echo LICH AM GIA TOC V12 - BUILD ANDROID FINAL
+echo LICH AM GIA TOC - BUILD ANDROID FINAL
 echo ==========================================
 echo.
 echo 1. APK debug cho may ao Android x86_64
@@ -33,7 +33,7 @@ if errorlevel 1 goto fail
 
 echo.
 echo [2/8] Patch Android Gradle/Manifest/MainActivity...
-echo V11: Gradle khong validate keystore; APK release se duoc ky thu cong sau khi build.
+echo : Gradle khong validate keystore; APK release se duoc ky thu cong sau khi build.
 python tools\PATCH_ANDROID_CLEAN.py
 if errorlevel 1 goto fail
 

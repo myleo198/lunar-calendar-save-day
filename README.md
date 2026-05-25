@@ -1,15 +1,13 @@
-# lunar-calendar-save-day
-Ứng dụng Flutter lịch âm Việt Nam cho gia đình/dòng họ: lưu giỗ chạp, sự kiện âm lịch, nhắc lịch, thống kê năm, thông báo Windows/Android, system tray, Google Calendar Sync và sao lưu JSON.
-# 🌙 Lịch âm gia tộc
+# 🌙 lich_am_gia_toc
 
 <p align="center">
-  <img src="assets/icons/app_icon.png" width="128" alt="Lịch âm gia tộc">
+  <img src="assets/icons/app_icon.png" width="128" alt="lich_am_gia_toc">
 </p>
 
 <h2 align="center">Ứng dụng lịch âm Việt Nam cho gia đình và dòng họ</h2>
 
 <p align="center">
-  <b>Lưu giỗ chạp · Nhắc lịch âm · Đồng bộ Google Calendar · Build Windows/Android</b>
+  <b>Lưu giỗ chạp · Nhắc lịch âm · Thống kê sự kiện · Google Calendar Sync · Windows & Android</b>
 </p>
 
 <p align="center">
@@ -19,27 +17,27 @@
   <img src="https://img.shields.io/badge/Android-arm64%20%7C%20x64-00A86B?style=for-the-badge&logo=android&logoColor=white">
 </p>
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Lịch%20âm-Chính-00A86B?style=flat-square">
-  <img src="https://img.shields.io/badge/Lịch%20dương-Phụ-111827?style=flat-square">
-  <img src="https://img.shields.io/badge/Google%20Calendar-Sync-00A86B?style=flat-square">
-  <img src="https://img.shields.io/badge/System%20Tray-Windows-111827?style=flat-square">
-  <img src="https://img.shields.io/badge/Notification-Android%20%7C%20Windows-00A86B?style=flat-square">
-</p>
-
 ---
 
-## 📌 Giới thiệu
+## Giới thiệu
 
-**Lịch âm gia tộc** là ứng dụng Flutter đa nền tảng dùng để xem lịch âm Việt Nam, lưu sự kiện theo âm lịch và tự nhắc lại theo tháng/quý/năm. Ứng dụng phù hợp cho việc quản lý các ngày quan trọng của gia đình, dòng họ như giỗ, chạp, giỗ họ, ngày sinh âm lịch, ngày mất, ngày kỵ và các sự kiện truyền thống.
+**lich_am_gia_toc** là ứng dụng Flutter đa nền tảng dùng để xem lịch âm Việt Nam, lưu sự kiện gia đình/dòng họ theo âm lịch và tự nhắc lại theo tháng, quý hoặc năm.
+
+Ứng dụng phù hợp để quản lý:
+
+- Giỗ ông bà, cha mẹ.
+- Chạp họ, giỗ họ.
+- Ngày sinh âm lịch.
+- Ngày mất, ngày kỵ.
+- Sự kiện truyền thống của gia đình, dòng họ.
 
 Trọng tâm của ứng dụng là **lịch âm**. Ngày âm được hiển thị nổi bật, ngày dương chỉ đóng vai trò phụ trợ. Khi lưu sự kiện âm lịch, ứng dụng tự quy đổi sang dương lịch theo từng năm để hiển thị và lập lịch nhắc.
 
 ---
 
-## ✨ Tính năng chính
+## Tính năng chính
 
-### 1. Lịch âm là trung tâm
+### Lịch âm là trung tâm
 
 - Ngày âm hiển thị lớn, màu đỏ, nằm bên trái ô lịch.
 - Chữ **âm** nằm dưới ngày âm.
@@ -47,7 +45,7 @@ Trọng tâm của ứng dụng là **lịch âm**. Ngày âm được hiển th
 - Tuần bắt đầu từ **Thứ 2**.
 - Thứ 7 và Chủ nhật có nền khác để dễ nhận biết.
 - Ô lịch tự co giãn theo kích thước cửa sổ Windows và màn hình Android.
-- Hỗ trợ xem theo:
+- Hỗ trợ các chế độ xem:
   - Tuần.
   - Tháng.
   - Năm.
@@ -56,105 +54,79 @@ Trọng tâm của ứng dụng là **lịch âm**. Ngày âm được hiển th
   - Thống kê sự kiện trong năm.
   - Google / Sao lưu.
 
-### 2. Sự kiện theo âm lịch
+### Sự kiện âm lịch
 
-Có thể lưu các loại sự kiện:
-
-- Giỗ ông, bà, cha, mẹ.
-- Chạp họ.
-- Giỗ họ.
-- Ngày sinh âm lịch.
-- Ngày mất.
-- Ngày kỵ.
-- Sự kiện truyền thống gia đình/dòng họ.
-
-Mỗi sự kiện gồm:
+Mỗi sự kiện có thể cấu hình:
 
 - Tên sự kiện.
 - Ghi chú.
 - Ngày âm.
 - Tháng âm.
-- Tùy chọn tháng nhuận.
-- Giờ nhắc.
-- Phút nhắc.
+- Tháng nhuận.
+- Giờ/phút nhắc.
 - Chu kỳ nhắc:
   - Hằng tháng âm lịch.
   - Hằng quý âm lịch.
   - Hằng năm âm lịch.
-- Nhắc trước theo:
-  - Số ngày.
-  - Số giờ.
+- Nhắc trước theo ngày hoặc giờ.
 
-### 3. Thông báo
+### Thông báo
 
-#### Android
+Android:
 
 - Thông báo trên thanh thông báo.
 - Thông báo trong bảng thông báo.
-- Cấu hình ưu tiên cao để hỗ trợ thông báo nổi.
-- Quyền Android:
-  - `POST_NOTIFICATIONS`
-  - `SCHEDULE_EXACT_ALARM`
-  - `VIBRATE`
-  - `RECEIVE_BOOT_COMPLETED`
-  - `INTERNET`
+- Hỗ trợ thông báo ưu tiên cao.
+- Hỗ trợ quyền thông báo và lịch nhắc chính xác.
 
-#### Windows
+Windows:
 
 - Thông báo hệ thống.
 - Thông báo nổi trong ứng dụng.
-- Có nút tắt.
-- Có nút nhắc lại 10 phút.
-- Có nút nhắc lại 1 giờ.
+- Nút tắt.
+- Nút nhắc lại.
+- Hỗ trợ system tray.
 
-### 4. Windows system tray
+### System tray trên Windows
 
 - Có biểu tượng ứng dụng ở system tray.
-- Có tùy chọn ẩn xuống system tray khi đóng cửa sổ.
-- Khi ẩn xuống tray:
-  - Bấm chuột trái để hiện lại.
-  - Chuột phải có menu:
-    - Hiện cửa sổ.
-    - Thoát hoàn toàn.
-- Đã xử lý đường dẫn icon tray cho bản release:
-  - `data/flutter_assets/assets/icons/app_icon.ico`
-  - `assets/icons/app_icon.ico`
+- Có tùy chọn ẩn xuống tray khi đóng cửa sổ.
+- Bấm chuột trái để hiện lại cửa sổ.
+- Chuột phải có menu:
+  - Hiện cửa sổ.
+  - Thoát hoàn toàn.
+- Icon tray được xử lý theo đúng đường dẫn của bản release.
 
-### 5. Build Windows ổn định
+### Google Calendar và sao lưu
 
-- Build trên đường dẫn ngắn:
-  - `C:\_lagt_v15_build`
-- Tránh lỗi MSVC/FileTracker do đường dẫn quá dài.
-- Sau khi build xong, tự xóa thư mục build tạm.
-- Giữ log build trong:
+- Đăng nhập Google bằng OAuth Device Code.
+- Đẩy sự kiện lên Google Calendar.
+- Tải sự kiện từ Google Calendar về ứng dụng.
+- Sao lưu JSON.
+- Khôi phục JSON.
+
+### Build ổn định
+
+Windows:
+
+- Build qua thư mục tạm đường dẫn ngắn:
+  - `C:\_lich_am_gia_toc_build`
+- Tự xóa build tạm sau khi hoàn tất.
+- Giữ build log trong:
   - `logs/windows_build_YYYYMMDD_HHMMSS.log`
-- Release Windows tạo:
-  - `dist/LichAmGiaToc_Windows_v15_0/`
-  - `dist/LichAmGiaToc_Windows_v15_0.zip`
+  - `logs/windows_debug_YYYYMMDD_HHMMSS.log`
+  - `logs/windows_release_YYYYMMDD_HHMMSS.log`
 
-### 6. Build Android đã ký APK
+Android:
 
 - Build debug cho máy ảo `x86_64`.
 - Build release cho điện thoại thật `arm64-v8a`.
 - Build universal cho `android-arm`, `android-arm64`, `android-x64`.
-- APK release được ký thủ công bằng:
-  - `zipalign`
-  - `apksigner sign`
-  - `apksigner verify`
-- File cài đặt cuối cùng:
-  - `build/app/outputs/flutter-apk/app-release.apk`
-
-### 7. Google Calendar và sao lưu
-
-- Đăng nhập Google bằng OAuth Device Code.
-- Đẩy sự kiện âm lịch lên Google Calendar.
-- Tải sự kiện từ Google Calendar về app.
-- Sao lưu JSON.
-- Khôi phục JSON.
+- APK release được ký bằng `zipalign` và `apksigner`.
 
 ---
 
-## 🧭 Nền tảng hỗ trợ
+## Nền tảng hỗ trợ
 
 | Nền tảng | Trạng thái |
 |---|---|
@@ -166,10 +138,10 @@ Mỗi sự kiện gồm:
 
 ---
 
-## 📁 Cấu trúc thư mục
+## Cấu trúc thư mục
 
 ```text
-lich_am_gia_toc_clean_v15_0_autoclean_logs/
+lich_am_gia_toc/
 ├─ lib/
 │  └─ main.dart
 ├─ assets/
@@ -183,12 +155,14 @@ lich_am_gia_toc_clean_v15_0_autoclean_logs/
 │  └─ SIGN_ANDROID_APK_FINAL.py
 ├─ BUILD_ANDROID_CLEAN.bat
 ├─ BUILD_WINDOWS_CLEAN.bat
+├─ BUILD_WINDOWS_DEBUG_ONLY.bat
+├─ BUILD_WINDOWS_RELEASE_ONLY.bat
 ├─ RUN_WINDOWS.bat
 ├─ pubspec.yaml
 └─ README.md
 ```
 
-Các thư mục được sinh ra khi build và không nên commit:
+Các thư mục sinh ra khi build, không cần commit:
 
 ```text
 build/
@@ -201,7 +175,7 @@ logs/
 
 ---
 
-## ⚙️ Yêu cầu môi trường
+## Cài đặt môi trường
 
 ### Windows
 
@@ -246,21 +220,14 @@ flutter doctor --android-licenses
 
 ### iOS
 
-Không build iOS trực tiếp trên Windows. Cần:
-
-- macOS.
-- Xcode.
-- CocoaPods.
-- Apple Developer account nếu phát hành TestFlight/App Store.
+Không build iOS trực tiếp trên Windows. Cần macOS và Xcode.
 
 ---
 
-## 🚀 Build Windows
-
-Mở CMD/PowerShell:
+## Build Windows
 
 ```bat
-cd /d M:\Flutter\lich_am_gia_toc_clean_v15_0_autoclean_logs
+cd /d M:\Flutter\lich_am_gia_toc
 BUILD_WINDOWS_CLEAN.bat
 ```
 
@@ -271,43 +238,138 @@ Chọn:
 2 = RELEASE
 ```
 
-### DEBUG
+Có thể chạy trực tiếp:
 
-Dùng để chạy thử ngay trên máy hiện tại:
-
-```text
-flutter run -d windows
+```bat
+BUILD_WINDOWS_DEBUG_ONLY.bat
+BUILD_WINDOWS_RELEASE_ONLY.bat
 ```
 
-### RELEASE
-
-Dùng để tạo app Windows độc lập. Kết quả nằm tại:
+Kết quả release:
 
 ```text
-dist\LichAmGiaToc_Windows_v15_0
-dist\LichAmGiaToc_Windows_v15_0.zip
+dist\lich_am_gia_toc
+dist\lich_am_gia_toc.zip
 ```
 
-Khi copy sang máy khác, phải copy **cả thư mục release**, không copy riêng file `.exe`.
-
-### Build log
-
-Mọi log build Windows được lưu tại:
-
-```text
-logs\windows_build_YYYYMMDD_HHMMSS.log
-```
-
-Khi lỗi, gửi file log mới nhất trong thư mục `logs`.
+Khi copy sang máy khác, copy cả thư mục hoặc dùng file zip. Không copy riêng file `.exe`.
 
 ---
 
-## 📱 Build Android
-
-Chạy:
+## Build Android
 
 ```bat
-cd /d M:\Flutter\lich_am_gia_toc_clean_v15_0_autoclean_logs
+cd /d M:\Flutter\lich_am_gia_toc
+BUILD_ANDROID_CLEAN.bat
+```
+
+Chọn:
+
+```text
+1 = APK debug cho máy ảo Android x86_64
+2 = APK release đã ký cho điện thoại thật arm64-v8a
+3 = APK universal release đã ký: arm + arm64 + x64
+```
+
+File cài đúng:
+
+```text
+build\app\outputs\flutter-apk\app-release.apk
+```
+
+---
+
+## Google Calendar Sync
+
+1. Tạo Google Cloud project.
+2. Bật Google Calendar API.
+3. Tạo OAuth Client ID phù hợp với Device Code Flow.
+4. Mở ứng dụng → **Google / Sao lưu**.
+5. Dán Client ID.
+6. Bấm **Đăng nhập Google**.
+7. Dùng:
+   - **Đẩy lên Google Calendar**.
+   - **Tải từ Google Calendar**.
+
+Ứng dụng nhận diện sự kiện của mình bằng metadata:
+
+```text
+lunar_family_calendar = true
+```
+
+---
+
+## Sao lưu và khôi phục JSON
+
+Vào:
+
+```text
+Google / Sao lưu
+```
+
+Sao lưu:
+
+```text
+Copy sao lưu
+```
+
+Khôi phục:
+
+```text
+Dán JSON → Khôi phục JSON
+```
+
+---
+
+## Lỗi thường gặp
+
+### `INSTALL_PARSE_FAILED_NO_CERTIFICATES`
+
+Build lại Android bằng lựa chọn `2` hoặc `3`, sau đó cài:
+
+```text
+build\app\outputs\flutter-apk\app-release.apk
+```
+
+Nếu đã cài bản cũ khác chữ ký, gỡ app cũ rồi cài lại.
+
+### `INSTALL_FAILED_NO_MATCHING_ABIS`
+
+- Máy ảo Android Studio nên dùng `x86_64`.
+- Điện thoại thật thường dùng `arm64-v8a`.
+- Nếu cần một file cho nhiều máy, chọn universal.
+
+### `JAVA_HOME is not set`
+
+Nếu cần set thủ công:
+
+```bat
+set JAVA_HOME=C:\Program Files\Android\Android Studio\jbr
+set PATH=%JAVA_HOME%\bin;%PATH%
+```
+
+### `FileTracker : error FTK1011`
+
+Ứng dụng đã build qua đường dẫn ngắn để hạn chế lỗi này. Nếu vẫn gặp, xem log mới nhất trong thư mục:
+
+```text
+logs/
+```
+
+### `atlbase.h: No such file or directory`
+
+Mở Visual Studio Installer và cài:
+
+```text
+C++ ATL for latest build tools
+C++ MFC for latest build tools
+```
+
+---
+
+## License
+
+Dự án dùng cho mục đích cá nhân, gia đình và dòng họ. Có thể chuyển sang MIT License nếu công khai mã nguồn.
 BUILD_ANDROID_CLEAN.bat
 ```
 

@@ -1,3 +1,18 @@
+## Ghi chú sửa lỗi build Windows
+
+- Mỗi lần build Windows dùng một thư mục tạm riêng theo thời gian và PID.
+- Có lock file để tránh chạy hai tiến trình build cùng lúc.
+- Logger không giữ file log mở lâu, tránh lỗi `OSError: [Errno 22] Invalid argument`.
+- Chỉ xóa đúng thư mục build tạm của lượt hiện tại.
+
+
+## Ghi chú sửa lỗi
+
+- Chữ **Hôm nay** không còn bị cố định ở ngày `24/5`.
+- Ứng dụng tự xác định hôm nay bằng ngày hệ thống và hiển thị đúng trên ô lịch hiện tại.
+- Nếu hôm nay trùng ngày lễ, nội dung hiển thị dạng: `Hôm nay • Tên ngày lễ`.
+
+
 # 🌙 lich_am_gia_toc
 
 <p align="center">

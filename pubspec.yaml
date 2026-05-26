@@ -1,7 +1,7 @@
 name: lich_am_gia_toc
 description: Ung dung lich am Viet Nam cho gia dinh va dong ho.
 publish_to: "none"
-version: 20.0.0+200
+version: 22.0.0+220
 
 environment:
   sdk: ">=3.4.0 <4.0.0"

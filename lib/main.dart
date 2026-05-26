@@ -989,7 +989,6 @@ class _LunarHomePageState extends State<LunarHomePage> with TrayListener, Window
       '30/4': 'Giải phóng',
       '1/5': 'Lao động',
       '2/9': 'Quốc khánh',
-      '24/5': 'Hôm nay',
     };
     const lunar = {
       '1/1': 'Tết Nguyên Đán',
@@ -1000,8 +999,18 @@ class _LunarHomePageState extends State<LunarHomePage> with TrayListener, Window
       '15/8': 'Trung Thu',
       '23/12': 'Ông Công Ông Táo',
     };
-    if (lunar.containsKey(lk)) return lunar[lk]!;
-    if (solar.containsKey(sk)) return solar[sk]!;
+    final isToday = sameDay(d, DateTime.now());
+
+    final lunarHoliday = lunar[lk];
+    final solarHoliday = solar[sk];
+
+    if (isToday) {
+      final extra = lunarHoliday ?? solarHoliday;
+      return extra == null ? 'Hôm nay' : 'Hôm nay • $extra';
+    }
+
+    if (lunarHoliday != null) return lunarHoliday;
+    if (solarHoliday != null) return solarHoliday;
     return '';
   }
 

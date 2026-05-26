@@ -4,13 +4,14 @@ BUILD_WINDOWS.py
 
 Trình build Windows ổn định cho lich_am_gia_toc.
 
-Mục tiêu:
-- Không dùng nhiều label phức tạp trong BAT để tránh CMD tự thoát hoặc mất biến.
-- Copy source sang đường dẫn ngắn C:\\_lich_am_gia_toc_build.
-- Loại trừ build/android/windows/dist/logs/.dart_tool.
-- Build debug/release trong đường dẫn ngắn để tránh MSVC FileTracker FTK1011.
-- Luôn ghi log vào thư mục gốc logs/.
-- Tự xóa build tạm sau khi xong.
+Sửa chính:
+- Mỗi lần build dùng một thư mục tạm riêng:
+  C:\\_lich_am_gia_toc_build\\run_YYYYMMDD_HHMMSS_PID
+  để tránh 2 tiến trình build ghi/xóa cùng một thư mục.
+- Có lock file trong logs/windows_build.lock để chặn chạy song song.
+- Logger không giữ file handle mở lâu; mỗi dòng log mở/ghi/đóng ngay để tránh:
+  OSError: [Errno 22] Invalid argument
+- Vẫn copy kết quả release về dist/lich_am_gia_toc và dist/lich_am_gia_toc.zip.
 """
 
 from __future__ import annotations
@@ -24,8 +25,11 @@ import sys
 import zipfile
 
 ORIGIN = Path(__file__).resolve().parents[1]
-WORK = Path(r"C:\_lich_am_gia_toc_build")
+WORK_BASE = Path(r"C:\_lich_am_gia_toc_build")
 LOG_DIR = ORIGIN / "logs"
+RUN_TAG = datetime.now().strftime("%Y%m%d_%H%M%S") + f"_{os.getpid()}"
+WORK = WORK_BASE / f"run_{RUN_TAG}"
+LOCK_FILE = LOG_DIR / "windows_build.lock"
 
 EXCLUDE_DIRS = {
     "build", ".dart_tool", "android", "windows", "ios", "macos", "linux",
@@ -39,19 +43,68 @@ def now_tag() -> str:
     return datetime.now().strftime("%Y%m%d_%H%M%S")
 
 
+def pid_alive(pid: int) -> bool:
+    try:
+        p = subprocess.run(
+            ["tasklist", "/FI", f"PID eq {pid}"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            text=True,
+            encoding="utf-8",
+            errors="ignore",
+        )
+        return str(pid) in p.stdout
+    except Exception:
+        return False
+
+
+class BuildLock:
+    def __init__(self):
+        LOG_DIR.mkdir(parents=True, exist_ok=True)
+        self.acquired = False
+
+    def acquire(self) -> None:
+        if LOCK_FILE.exists():
+            raw = LOCK_FILE.read_text(encoding="utf-8", errors="ignore").strip()
+            old_pid = int(raw) if raw.isdigit() else 0
+            if old_pid and pid_alive(old_pid):
+                raise RuntimeError(
+                    f"Đang có tiến trình build khác chạy với PID {old_pid}. "
+                    f"Hãy đợi xong hoặc đóng tiến trình đó rồi chạy lại."
+                )
+            try:
+                LOCK_FILE.unlink()
+            except Exception:
+                pass
+
+        # Atomic lock create.
+        fd = os.open(str(LOCK_FILE), os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+        with os.fdopen(fd, "w", encoding="utf-8") as fp:
+            fp.write(str(os.getpid()))
+        self.acquired = True
+
+    def release(self) -> None:
+        if self.acquired:
+            try:
+                LOCK_FILE.unlink()
+            except Exception:
+                pass
+
+
 class Logger:
     def __init__(self, mode: str):
         LOG_DIR.mkdir(parents=True, exist_ok=True)
         self.path = LOG_DIR / f"windows_{mode}_{now_tag()}.log"
-        self.fp = self.path.open("w", encoding="utf-8", errors="ignore")
+        self.path.write_text("", encoding="utf-8")
 
     def write(self, text: str = "") -> None:
         print(text)
-        self.fp.write(text + "\n")
-        self.fp.flush()
-
-    def close(self) -> None:
-        self.fp.close()
+        try:
+            with self.path.open("a", encoding="utf-8", errors="ignore") as fp:
+                fp.write(text + "\n")
+        except OSError:
+            # Không để lỗi log làm chết build.
+            print("[CANH BAO] Khong ghi duoc log tam thoi.")
 
     def tail(self, n: int = 80) -> str:
         try:
@@ -94,10 +147,7 @@ def run(cmd: list[str], log: Logger, cwd: Path | None = None, allow_fail: bool =
     )
     assert p.stdout is not None
     for line in p.stdout:
-        line = line.rstrip("\n")
-        print(line)
-        log.fp.write(line + "\n")
-        log.fp.flush()
+        log.write(line.rstrip("\n"))
     rc = p.wait()
     if rc != 0 and not allow_fail:
         raise RuntimeError(f"Lệnh lỗi mã {rc}: {' '.join(cmd)}")
@@ -119,24 +169,24 @@ def should_skip(path: Path) -> bool:
 
 def copy_source(log: Logger) -> None:
     if WORK.exists():
-        log.write(f"Xóa build tạm cũ: {WORK}")
+        log.write(f"Xóa build tạm cũ của lượt hiện tại: {WORK}")
         shutil.rmtree(WORK, ignore_errors=True)
     WORK.mkdir(parents=True, exist_ok=True)
 
     log.write(f"Copy source từ: {ORIGIN}")
-    log.write(f"Sang đường dẫn ngắn: {WORK}")
+    log.write(f"Sang đường dẫn ngắn riêng: {WORK}")
 
     copied_files = 0
     for src in ORIGIN.rglob("*"):
         if should_skip(src):
             continue
         rel = src.relative_to(ORIGIN)
-        dst = WORK / rel
+        target = WORK / rel
         if src.is_dir():
-            dst.mkdir(parents=True, exist_ok=True)
+            target.mkdir(parents=True, exist_ok=True)
         elif src.is_file():
-            dst.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(src, dst)
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(src, target)
             copied_files += 1
 
     log.write(f"Đã copy {copied_files} file.")
@@ -174,8 +224,7 @@ def clean_work_build_dirs(log: Logger) -> None:
             shutil.rmtree(p, ignore_errors=True)
 
 
-def build_debug() -> int:
-    log = Logger("debug")
+def build_debug(log: Logger) -> int:
     try:
         log.write("=====================================================")
         log.write("LICH AM GIA TOC - DEBUG WINDOWS")
@@ -203,11 +252,9 @@ def build_debug() -> int:
     finally:
         cleanup_temp(log)
         log.write(f"Full log: {log.path}")
-        log.close()
 
 
-def build_release() -> int:
-    log = Logger("release")
+def build_release(log: Logger) -> int:
     try:
         log.write("=====================================================")
         log.write("LICH AM GIA TOC - RELEASE WINDOWS")
@@ -280,18 +327,23 @@ def build_release() -> int:
     finally:
         cleanup_temp(log)
         log.write(f"Full log: {log.path}")
-        log.close()
 
 
 def cleanup_temp(log: Logger) -> None:
     try:
         if WORK.exists():
-            log.write(f"Xóa build tạm: {WORK}")
+            log.write(f"Xóa build tạm của lượt hiện tại: {WORK}")
             shutil.rmtree(WORK, ignore_errors=True)
             if WORK.exists():
                 log.write("CẢNH BÁO: chưa xóa được build tạm. Có thể còn process đang dùng.")
             else:
                 log.write("OK: đã xóa build tạm.")
+        # Dọn WORK_BASE nếu rỗng.
+        try:
+            if WORK_BASE.exists() and not any(WORK_BASE.iterdir()):
+                WORK_BASE.rmdir()
+        except Exception:
+            pass
     except Exception as e:
         log.write(f"CẢNH BÁO khi xóa build tạm: {e}")
 
@@ -306,13 +358,25 @@ def main() -> int:
     print()
     choice = input("Nhập lựa chọn 1 hoặc 2: ").strip()
 
-    if choice == "1":
-        return build_debug()
-    if choice == "2":
-        return build_release()
+    lock = BuildLock()
+    try:
+        lock.acquire()
+    except Exception as e:
+        print("")
+        print("Không thể bắt đầu build:")
+        print(e)
+        print("")
+        return 1
 
-    print(f"Lựa chọn không hợp lệ: {choice}")
-    return 1
+    try:
+        if choice == "1":
+            return build_debug(Logger("debug"))
+        if choice == "2":
+            return build_release(Logger("release"))
+        print(f"Lựa chọn không hợp lệ: {choice}")
+        return 1
+    finally:
+        lock.release()
 
 
 if __name__ == "__main__":

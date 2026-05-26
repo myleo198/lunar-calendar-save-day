@@ -29,7 +29,7 @@ def patch_app_gradle():
     p = ROOT / "android/app/build.gradle.kts"
     backup(p)
 
-    # V11: KHÔNG cấu hình signingConfig trong Gradle.
+    # : KHÔNG cấu hình signingConfig trong Gradle.
     # Lý do: nếu Gradle validate signing trước khi tạo keystore sẽ lỗi:
     # validateSigningRelease > Keystore file ... lunar_sideload.jks not found.
     # Quy trình v11 là:

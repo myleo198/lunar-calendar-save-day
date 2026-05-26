@@ -4,7 +4,7 @@ SIGN_ANDROID_APK_FINAL.py - v12
 
 Ký thủ công APK release bằng zipalign + apksigner.
 
-V12 sửa lỗi:
+ sửa lỗi:
   ERROR: JAVA_HOME is not set and no 'java' command could be found in your PATH.
 
 Nguyên nhân:
